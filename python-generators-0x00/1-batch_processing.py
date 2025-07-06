@@ -11,6 +11,7 @@ def stream_users_in_batches(batch_size):
     cursor = connection.cursor(dictionary=True)
     cursor.execute("SELECT * FROM user_data")
 
+    all_batches = []
     while True:
         batch = cursor.fetchmany(batch_size)
         if not batch:
@@ -19,6 +20,7 @@ def stream_users_in_batches(batch_size):
 
     cursor.close()
     connection.close()
+    return all_batches
 
 
 def batch_processing(batch_size):

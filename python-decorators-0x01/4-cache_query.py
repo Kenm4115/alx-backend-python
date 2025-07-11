@@ -1,4 +1,12 @@
 
+""""
+Objective: create a decorator that caches the results of a database queries inorder to avoid redundant calls
+
+Instructions:
+
+Complete the code below by implementing a decorator cache_query(func) that caches query results based on the SQL query string
+"""
+
 import time
 import sqlite3 
 import functools

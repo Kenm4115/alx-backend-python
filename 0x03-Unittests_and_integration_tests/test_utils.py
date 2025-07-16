@@ -5,11 +5,10 @@ Create a TestAccessNestedMap class that inherits from unittest.TestCase.
 Implement the TestAccessNestedMap.test_access_nested_map method
 Decorate the method with @parameterized.expand
 The body of the test method should not be longer than 2 lines.
-Implement TestAccessNestedMap.test_access_nested_map_exception. 
+Implement TestAccessNestedMap.test_access_nested_map_exception.
 """
 
 #!/usr/bin/env python3
-
 import unittest
 from unittest.mock import patch, Mock
 from parameterized import parameterized
@@ -33,14 +32,14 @@ class TestAccessNestedMap(unittest.TestCase):
         ({"a": 1}, ("a", "b")),
     ])
     def test_access_nested_map_exception(self, nested_map, path):
-        #Test access_nested_map raises KeyError for bad path
+        """Test access_nested_map raises KeyError for bad path"""
         with self.assertRaises(KeyError) as cm:
             access_nested_map(nested_map, path)
         self.assertEqual(str(cm.exception), repr(path[-1]))
 
 
 class TestGetJson(unittest.TestCase):
-    #Unit tests for utils.get_json
+    """Unit tests for utils.get_json"""
 
     @parameterized.expand([
         ("http://example.com", {"payload": True}),

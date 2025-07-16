@@ -11,6 +11,7 @@ Ensure to use the__enter__() and the __exit__() methods
 
 import sqlite3
 
+
 class ExecuteQuery:
     def __init__(self, db_name, query, params=None):
         self.db_name = db_name
@@ -30,6 +31,7 @@ class ExecuteQuery:
         if self.conn:
             self.conn.close()
             print("Database connection closed.")
+
 
 # Example usage
 query = "SELECT * FROM users WHERE age > ?"

@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 
 """
 In this task you will write the first unit test for utils.access_nested_map.
@@ -7,7 +8,7 @@ Decorate the method with @parameterized.expand
 The body of the test method should not be longer than 2 lines.
 Implement TestAccessNestedMap.test_access_nested_map_exception.
 """
-#!/usr/bin/env python3
+
 import unittest
 from unittest.mock import patch, Mock
 from parameterized import parameterized

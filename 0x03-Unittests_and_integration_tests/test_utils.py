@@ -7,8 +7,8 @@ Decorate the method with @parameterized.expand
 The body of the test method should not be longer than 2 lines.
 Implement TestAccessNestedMap.test_access_nested_map_exception.
 """
-
 #!/usr/bin/env python3
+
 import unittest
 from unittest.mock import patch, Mock
 from parameterized import parameterized
@@ -70,7 +70,8 @@ class TestMemoize(unittest.TestCase):
             def a_property(self):
                 return self.a_method()
 
-        with patch.object(TestClass, 'a_method', return_value=42) as mock_method:
+        with patch.object(TestClass, 'a_method', 
+                          return_value=42) as mock_method:
             obj = TestClass()
             # Call twice
             self.assertEqual(obj.a_property, 42)

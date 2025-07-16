@@ -1,4 +1,4 @@
-
+#!/usr/bin/env python3
 """
 
 Use @patch as a decorator to make sure get_json is called once with the expected argument but make sure it is not executed.
@@ -34,7 +34,7 @@ The setupClass should mock requests.get to return example payloads found in the 
 Implement the tearDownClass class method to stop the patcher.
 
 """
-#!/usr/bin/env python3
+
 import unittest
 from unittest.mock import patch, PropertyMock
 from parameterized import parameterized
@@ -65,7 +65,8 @@ class TestGithubOrgClient(unittest.TestCase):
 
     def test_public_repos_url(self):
         """Test _public_repos_url property returns expected value"""
-        with patch('client.GithubOrgClient.org', new_callable=PropertyMock) as mock_org:
+        with patch('client.GithubOrgClient.org',
+                   new_callable=PropertyMock) as mock_org:
             mock_org.return_value = {"repos_url": "http://some_url"}
             client = GithubOrgClient("google")
             self.assertEqual(client._public_repos_url, "http://some_url")
@@ -77,7 +78,8 @@ class TestGithubOrgClient(unittest.TestCase):
             {"name": "repo1"},
             {"name": "repo2"}
         ]
-        with patch('client.GithubOrgClient._public_repos_url', new_callable=PropertyMock) as mock_url:
+        with patch('client.GithubOrgClient._public_repos_url',
+                   new_callable=PropertyMock) as mock_url:
             mock_url.return_value = "http://fake.url"
             client = GithubOrgClient("google")
             self.assertEqual(client.public_repos(), ["repo1", "repo2"])
@@ -90,7 +92,8 @@ class TestGithubOrgClient(unittest.TestCase):
     ])
     def test_has_license(self, repo, license_key, expected):
         """Test has_license returns expected boolean"""
-        self.assertEqual(GithubOrgClient.has_license(repo, license_key), expected)
+        self.assertEqual(GithubOrgClient.has_license(repo, license_key),
+                          expected)
 
 
 @parameterized_class([
@@ -133,3 +136,6 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
         """Integration test filtering by license"""
         client = GithubOrgClient("google")
         self.assertEqual(client.public_repos("apache-2.0"), self.apache2_repos)
+
+if __name__ == "__main__":
+    unittest.main()

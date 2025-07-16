@@ -1,40 +1,4 @@
 #!/usr/bin/env python3
-"""
-
-Use @patch as a decorator to make sure get_json is called once with the expected argument but make sure it is not executed.
-
-Use @parameterized.expand as a decorator to parametrize the test with a couple of org examples to pass to GithubOrgClient, in this order:
-google
-abc
-Of course, no external HTTP calls should be made.
-
-Implement the test_public_repos_url method to unit-test GithubOrgClient._public_repos_url.
-
-Use patch as a context manager to patch GithubOrgClient.org and make it return a known payload.
-
-Test that the result of _public_repos_url is the expected one based on the mocked payload.
-
-Use @patch as a decorator to mock get_json and make it return a payload of your choice.
-
-Use patch as a context manager to mock GithubOrgClient._public_repos_url and return a value of your choice.
-
-Test that the list of repos is what you expect from the chosen payload.
-
-Test that the mocked property and the mocked get_json was called once.
-
-Implement TestGithubOrgClient.test_has_license to unit-test GithubOrgClient.has_license.
-
-Parametrize the test with the following inputs
-
-Use @parameterized_class to decorate the class and parameterize it with fixtures found in fixtures.py.
-
-org_payload, repos_payload, expected_repos, apache2_repos
-The setupClass should mock requests.get to return example payloads found in the fixtures.
-
-Implement the tearDownClass class method to stop the patcher.
-
-"""
-
 import unittest
 from unittest.mock import patch, PropertyMock
 from parameterized import parameterized

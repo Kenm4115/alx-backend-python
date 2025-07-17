@@ -38,16 +38,17 @@ class TestGithubOrgClient(unittest.TestCase):
     def test_public_repos(self, mock_get_json):
         """Test public_repos returns expected list and uses mocks correctly"""
         mock_get_json.return_value = [
-            {"name": "repo1"},
-            {"name": "repo2"}
+            {"name": "repo1", "license": {"key": "apache-2.0"}},
+            {"name": "repo2", "license": {"key": "mit"}}
         ]
         with patch('client.GithubOrgClient._public_repos_url',
-                   new_callable=PropertyMock) as mock_url:
+                new_callable=PropertyMock) as mock_url:
             mock_url.return_value = "http://fake.url"
             client = GithubOrgClient("google")
             self.assertEqual(client.public_repos(), ["repo1", "repo2"])
             mock_get_json.assert_called_once_with("http://fake.url")
             mock_url.assert_called_once()
+
 
     @parameterized.expand([
         ({"license": {"key": "my_license"}}, "my_license", True),

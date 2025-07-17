@@ -57,7 +57,7 @@ class TestGithubOrgClient(unittest.TestCase):
     def test_has_license(self, repo, license_key, expected):
         """Test has_license returns expected boolean"""
         self.assertEqual(GithubOrgClient.has_license(repo, license_key),
-                        expected)
+                         expected)
 
 
 @parameterized_class([
@@ -100,6 +100,3 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
         """Integration test filtering by license"""
         client = GithubOrgClient("google")
         self.assertEqual(client.public_repos("apache-2.0"), self.apache2_repos)
-
-if __name__ == "__main__":
-    unittest.main()

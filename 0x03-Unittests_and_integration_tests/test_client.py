@@ -22,7 +22,9 @@ Tests included:
 
 import unittest
 from unittest.mock import patch, PropertyMock, Mock
-from parameterized import parameterized, parameterized_class
+from parameterized import parameterized
+from parameterized import parameterized_class
+
 from client import GithubOrgClient
 from fixtures import org_payload, repos_payload
 from fixtures import expected_repos, apache2_repos

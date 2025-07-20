@@ -11,6 +11,6 @@ repos_payload = [
     {"id": 3, "name": "repo3", "license": {"key": "apache-2.0"}},
 ]
 
-
+expected_repos = ["repo1", "repo2", "repo3"]
 
 apache2_repos = ["repo1", "repo3"]

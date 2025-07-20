@@ -30,6 +30,7 @@ from fixtures import expected_repos, apache2_repos
 class TestGithubOrgClient(unittest.TestCase):
     """Unit tests for GithubOrgClient methods and properties."""
 
+
     @parameterized.expand([
         ("google",),
         ("abc",),

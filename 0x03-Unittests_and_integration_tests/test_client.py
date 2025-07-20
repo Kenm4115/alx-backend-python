@@ -24,10 +24,10 @@ import unittest
 from unittest.mock import patch, PropertyMock, Mock
 from parameterized import parameterized
 from parameterized import parameterized_class
-
 from client import GithubOrgClient
-from fixtures import org_payload, repos_payload
-from fixtures import expected_repos, apache2_repos
+from fixtures import expected_repos, apache2_repos, repos_payload
+#from fixtures import org_payload
+
 
 
 class TestGithubOrgClient(unittest.TestCase):
@@ -106,17 +106,17 @@ class TestGithubOrgClient(unittest.TestCase):
         - Returns True if repo has the given license key
         - Returns False otherwise
         """
-        result = GithubOrgClient.has_license(license_key)
+        result = GithubOrgClient.has_license(repo, license_key)
         self.assertEqual(result, expected)
 
 
 @parameterized_class([
     {
         # These values come from fixtures.py
-        "org_payload": org_payload,
         "repos_payload": repos_payload,
         "expected_repos": expected_repos,
         "apache2_repos": apache2_repos,
+        #"org_payload": org_payload,
     }
 ])
 class TestIntegrationGithubOrgClient(unittest.TestCase):

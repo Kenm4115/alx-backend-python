@@ -40,10 +40,13 @@ class IsParticipantOfConversation(BasePermission):
             if hasattr(obj, 'conversation'):
                 return request.user in obj.conversation.participants.all()
             return False
-        else:
-            # For write operations, check similarly
+        # For PUT, PATCH, DELETE, POST – also require participant
+        if request.method in ['PUT', 'PATCH', 'DELETE', 'POST']:
             if hasattr(obj, 'participants'):
                 return request.user in obj.participants.all()
             if hasattr(obj, 'conversation'):
                 return request.user in obj.conversation.participants.all()
             return False
+
+        return False
+        

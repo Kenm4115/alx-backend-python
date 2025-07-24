@@ -5,6 +5,8 @@ from django.shortcuts import get_object_or_404
 from .permissions import IsParticipantOrReadOnly, IsSenderOrReadOnly, IsParticipantOfConversation
 from django_filters.rest_framework import DjangoFilterBackend
 from .filters import MessageFilter  # ✅ import your filter class
+from rest_framework.status import HTTP_403_FORBIDDEN
+from rest_framework.decorators import action
 
 from .models import Conversation, Message, User
 from .serializers import ConversationSerializer, MessageSerializer
@@ -80,3 +82,31 @@ class MessageViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         # filter to messages in conversations the user is part of
         return Message.objects.filter(conversation__participants=self.request.user)
+    
+       
+    @action(detail=False, methods=['post'])
+    def send_custom(self, request):
+        conversation_id = request.data.get('conversation')
+        message_body = request.data.get('message_body')
+
+        # Check if user is participant
+        from .models import Conversation
+        try:
+            conversation = Conversation.objects.get(id=conversation_id)
+        except Conversation.DoesNotExist:
+            return Response({'detail': 'Conversation not found.'}, status=status.HTTP_404_NOT_FOUND)
+
+        if request.user not in conversation.participants.all():
+            # ✅ Forbidden response
+            return Response({'detail': 'You are not a participant of this conversation.'},
+                            status=HTTP_403_FORBIDDEN)
+
+        # Otherwise, proceed to create the message
+        from .models import Message
+        message = Message.objects.create(
+            conversation=conversation,
+            sender=request.user,
+            message_body=message_body
+        )
+        from .serializers import MessageSerializer
+        return Response(MessageSerializer(message).data, status=status.HTTP_201_CREATED)

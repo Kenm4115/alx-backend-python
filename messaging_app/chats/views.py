@@ -1,7 +1,8 @@
-from rest_framework import viewsets, status, filters 
+from rest_framework import viewsets, status, filters
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from django.shortcuts import get_object_or_404
+from . permissions import IsParticipantOrReadOnly, IsSenderOrReadOnly
 
 from .models import Conversation, Message, User
 from .serializers import ConversationSerializer, MessageSerializer
@@ -14,6 +15,7 @@ class ConversationViewSet(viewsets.ModelViewSet):
     queryset = Conversation.objects.all().prefetch_related('participants', 'messages')
     serializer_class = ConversationSerializer
     permission_classes = [IsAuthenticated]
+    permission_classes = [IsParticipantOrReadOnly]
 
     # ✅ enable search and ordering
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
@@ -38,7 +40,10 @@ class ConversationViewSet(viewsets.ModelViewSet):
 
         serializer = self.get_serializer(conversation)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
-
+    
+    def get_queryset(self):
+        # filter to conversations where current user is a participant
+        return Conversation.objects.filter(participants=self.request.user)
 
 # ---------------------------------
 # Message ViewSet with filters
@@ -46,6 +51,7 @@ class ConversationViewSet(viewsets.ModelViewSet):
 class MessageViewSet(viewsets.ModelViewSet):
     serializer_class = MessageSerializer
     permission_classes = [IsAuthenticated]
+    permission_classes = [IsSenderOrReadOnly]
 
     def get_queryset(self):
         queryset = Message.objects.all().select_related('conversation', 'sender')
@@ -60,3 +66,7 @@ class MessageViewSet(viewsets.ModelViewSet):
         if self.request.user not in conversation.participants.all():
             raise serializer.ValidationError("You are not part of this conversation.")
         serializer.save(conversation=conversation, sender=self.request.user)
+
+    def get_queryset(self):
+        # filter to messages in conversations the user is part of
+        return Message.objects.filter(conversation__participants=self.request.user)

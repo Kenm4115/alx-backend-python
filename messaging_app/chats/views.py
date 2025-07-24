@@ -2,7 +2,9 @@ from rest_framework import viewsets, status, filters
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from django.shortcuts import get_object_or_404
-from . permissions import IsParticipantOrReadOnly, IsSenderOrReadOnly
+from .permissions import IsParticipantOrReadOnly, IsSenderOrReadOnly, IsParticipantOfConversation
+from django_filters.rest_framework import DjangoFilterBackend
+from .filters import MessageFilter  # ✅ import your filter class
 
 from .models import Conversation, Message, User
 from .serializers import ConversationSerializer, MessageSerializer
@@ -16,6 +18,7 @@ class ConversationViewSet(viewsets.ModelViewSet):
     serializer_class = ConversationSerializer
     permission_classes = [IsAuthenticated]
     permission_classes = [IsParticipantOrReadOnly]
+    permission_classes = [IsParticipantOfConversation]
 
     # ✅ enable search and ordering
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
@@ -52,6 +55,13 @@ class MessageViewSet(viewsets.ModelViewSet):
     serializer_class = MessageSerializer
     permission_classes = [IsAuthenticated]
     permission_classes = [IsSenderOrReadOnly]
+    queryset = Message.objects.all()
+    serializer_class = MessageSerializer
+    permission_classes = [IsParticipantOfConversation]
+
+    # ✅ enable filtering
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = MessageFilter
 
     def get_queryset(self):
         queryset = Message.objects.all().select_related('conversation', 'sender')

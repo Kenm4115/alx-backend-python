@@ -1,0 +1,132 @@
+{
+	"id": "57805b18-0ed5-426b-8f31-6f8885f328b0",
+	"name": "Messaging App API",
+	"timestamp": "2025-07-24T23:31:54.462Z",
+	"collection_id": "40883660-23395758-e2e6-4fa7-b183-11da15d57675",
+	"folder_id": 0,
+	"environment_id": "0",
+	"totalPass": 0,
+	"delay": 0,
+	"persist": true,
+	"status": "finished",
+	"startedAt": "2025-07-24T23:31:53.284Z",
+	"totalFail": 0,
+	"results": [
+		{
+			"id": "ded0c41c-bd69-40fd-bd81-4cc4289b5d3b",
+			"name": "Obtain JWT Token",
+			"url": "http://127.0.0.1:8000/api/token",
+			"time": 149,
+			"responseCode": {
+				"code": 500,
+				"name": "Internal Server Error"
+			},
+			"tests": {},
+			"testPassFailCounts": {},
+			"times": [
+				149
+			],
+			"allTests": [
+				{}
+			]
+		},
+		{
+			"id": "ed4af119-f35d-4124-8ed0-59794230b822",
+			"name": "Create Conversation",
+			"url": "http://127.0.0.1:8000/api/conversations/",
+			"time": 66,
+			"responseCode": {
+				"code": 403,
+				"name": "Forbidden"
+			},
+			"tests": {},
+			"testPassFailCounts": {},
+			"times": [
+				66
+			],
+			"allTests": [
+				{}
+			]
+		},
+		{
+			"id": "661d4172-6037-4b9a-9897-d5632f3a37b7",
+			"name": "Fetch Conversations",
+			"url": "http://127.0.0.1:8000/api/conversations/",
+			"time": 6,
+			"responseCode": {
+				"code": 403,
+				"name": "Forbidden"
+			},
+			"tests": {},
+			"testPassFailCounts": {},
+			"times": [
+				6
+			],
+			"allTests": [
+				{}
+			]
+		},
+		{
+			"id": "f4a418e7-eb34-4d6f-97f2-44f77b718907",
+			"name": "Send Message",
+			"url": "http://127.0.0.1:8000/api/messages/",
+			"time": 15,
+			"responseCode": {
+				"code": 404,
+				"name": "Not Found"
+			},
+			"tests": {},
+			"testPassFailCounts": {},
+			"times": [
+				15
+			],
+			"allTests": [
+				{}
+			]
+		},
+		{
+			"id": "f536198b-6f22-4b7f-91f3-1ee2600db81c",
+			"name": "Fetch Messages",
+			"url": "http://127.0.0.1:8000/api/messages/?page=1",
+			"time": 11,
+			"responseCode": {
+				"code": 404,
+				"name": "Not Found"
+			},
+			"tests": {},
+			"testPassFailCounts": {},
+			"times": [
+				11
+			],
+			"allTests": [
+				{}
+			]
+		}
+	],
+	"count": 1,
+	"totalTime": 247,
+	"collection": {
+		"requests": [
+			{
+				"id": "ded0c41c-bd69-40fd-bd81-4cc4289b5d3b",
+				"method": "POST"
+			},
+			{
+				"id": "ed4af119-f35d-4124-8ed0-59794230b822",
+				"method": "POST"
+			},
+			{
+				"id": "661d4172-6037-4b9a-9897-d5632f3a37b7",
+				"method": "GET"
+			},
+			{
+				"id": "f4a418e7-eb34-4d6f-97f2-44f77b718907",
+				"method": "POST"
+			},
+			{
+				"id": "f536198b-6f22-4b7f-91f3-1ee2600db81c",
+				"method": "GET"
+			}
+		]
+	}
+}

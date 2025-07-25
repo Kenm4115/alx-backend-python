@@ -9,7 +9,7 @@ from datetime import datetime
 # Configure a logger that writes to a file
 logger = logging.getLogger("request_logger")
 # file will be created in project root
-handler = logging.FileHandler("request_logs.log")
+handler = logging.FileHandler("requests.log")
 formatter = logging.Formatter('%(message)s')
 handler.setFormatter(formatter)
 logger.addHandler(handler)

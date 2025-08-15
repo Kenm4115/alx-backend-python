@@ -1,0 +1,28 @@
+#!/bin/bash
+
+DEPLOYMENT="messaging-app-blue"
+SERVICE_URL="http://$(minikube ip):$(kubectl get svc messaging-app-service -o=jsonpath='{.spec.ports[0].nodePort}')"
+
+echo "🚀 Applying updated deployment..."
+kubectl apply -f blue_deployment.yaml
+
+echo "⏳ Monitoring rollout progress..."
+kubectl rollout status deployment/$DEPLOYMENT
+
+echo "📡 Starting downtime test..."
+(
+  while true; do
+    curl -s -o /dev/null -w "%{http_code} " $SERVICE_URL
+    sleep 1
+  done
+) &
+
+TEST_PID=$!
+
+echo "💤 Waiting for update to finish..."
+kubectl rollout status deployment/$DEPLOYMENT
+
+kill $TEST_PID
+
+echo "✅ Rolling update complete. Current pods:"
+kubectl get pods -l app=messaging-app

@@ -1,0 +1,16 @@
+#!/bin/bash
+
+# Apply Blue Deployment
+echo "Deploying Blue Version..."
+kubectl apply -f blue_deployment.yaml
+
+# Apply Green Deployment
+echo "Deploying Green Version..."
+kubectl apply -f green_deployment.yaml
+
+# Check logs for Green version pods
+GREEN_PODS=$(kubectl get pods -l version=green -o name)
+echo "Checking logs for Green version..."
+kubectl logs $GREEN_PODS
+
+echo "✅ Blue-Green deployments applied. Update kubeservice.yaml to switch traffic."

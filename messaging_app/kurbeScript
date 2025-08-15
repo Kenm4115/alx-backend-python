@@ -1,0 +1,16 @@
+#!/bin/bash
+# kurbeScript - Start and verify Kubernetes cluster locally with Minikube
+
+# Exit on error
+set -e
+
+echo "🚀 Starting Kubernetes cluster using Minikube..."
+minikube start
+
+echo "✅ Verifying cluster info..."
+kubectl cluster-info
+
+echo "📦 Getting available pods in all namespaces..."
+kubectl get pods --all-namespaces
+
+echo "🎉 Kubernetes cluster is up and running!"

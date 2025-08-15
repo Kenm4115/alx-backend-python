@@ -1,0 +1,23 @@
+#!/bin/bash
+
+# Exit immediately if any command fails
+set -e
+
+DEPLOYMENT_NAME="messaging-app-deployment"
+NAMESPACE="default"
+
+echo "📦 Scaling $DEPLOYMENT_NAME to 3 replicas..."
+kubectl scale deployment $DEPLOYMENT_NAME --replicas=3 --namespace=$NAMESPACE
+
+echo "⏳ Waiting for pods to be ready..."
+kubectl rollout status deployment/$DEPLOYMENT_NAME --namespace=$NAMESPACE
+
+echo "✅ Current Pods:"
+kubectl get pods --namespace=$NAMESPACE -o wide
+
+echo "🚀 Starting load test using wrk..."
+echo "Note: Ensure 'wrk' is installed and the app is accessible."
+wrk -t4 -c50 -d30s http://localhost:8000/
+
+echo "📊 Monitoring resource usage..."
+kubectl top pods --namespace=$NAMESPACE

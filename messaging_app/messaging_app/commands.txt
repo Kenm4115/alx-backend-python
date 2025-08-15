@@ -1,1 +1,6 @@
 kubectl apply -f ingress.yaml
+if [ -s commands.txt ]; then
+    echo "✅ commands.txt exists and is not empty"
+else
+    echo "❌ commands.txt is missing or empty"
+fi

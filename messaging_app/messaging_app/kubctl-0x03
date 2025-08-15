@@ -1,28 +1,35 @@
 #!/bin/bash
+# kubctl-0x03 - Perform rolling update on blue deployment and test availability
+
+set -e
 
 DEPLOYMENT="messaging-app-blue"
-SERVICE_URL="http://$(minikube ip):$(kubectl get svc messaging-app-service -o=jsonpath='{.spec.ports[0].nodePort}')"
+SERVICE_NAME="messaging-app-service"
+SERVICE_PORT=8000
 
-echo "🚀 Applying updated deployment..."
-kubectl apply -f blue_deployment.yaml
+echo "Applying updated blue deployment..."
+kubectl apply -f messaging_app/blue_deployment.yaml
 
-echo "⏳ Monitoring rollout progress..."
-kubectl rollout status deployment/$DEPLOYMENT
+echo "Monitoring rollout status..."
+kubectl rollout status deployment "$DEPLOYMENT"
 
-echo "📡 Starting downtime test..."
-(
-  while true; do
-    curl -s -o /dev/null -w "%{http_code} " $SERVICE_URL
+echo "Fetching service URL..."
+SERVICE_URL=$(minikube service "$SERVICE_NAME" --url | head -n 1)
+
+if [ -z "$SERVICE_URL" ]; then
+    echo "Could not retrieve service URL. Is the service exposed?"
+    exit 1
+fi
+
+echo "Testing for downtime during rollout..."
+for i in {1..20}; do
+    if curl -s --max-time 2 "$SERVICE_URL" > /dev/null; then
+        echo "[$(date +%H:%M:%S)] Service is UP"
+    else
+        echo "[$(date +%H:%M:%S)] Service is DOWN!"
+    fi
     sleep 1
-  done
-) &
+done
 
-TEST_PID=$!
-
-echo "💤 Waiting for update to finish..."
-kubectl rollout status deployment/$DEPLOYMENT
-
-kill $TEST_PID
-
-echo "✅ Rolling update complete. Current pods:"
-kubectl get pods -l app=messaging-app
+echo "Verifying current pods..."
+kubectl get pods -l app=messaging-app,version=blue -o wide

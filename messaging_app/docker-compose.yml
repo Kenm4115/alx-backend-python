@@ -15,7 +15,6 @@ services:
     ports:
       - "3306:3306"
     volumes:
-      # Persist MySQL data
       - db_data:/var/lib/mysql
 
   web:
@@ -32,6 +31,5 @@ services:
     volumes:
       - .:/app
 
-# Define named volume
 volumes:
   db_data:

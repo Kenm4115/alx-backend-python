@@ -1,0 +1,70 @@
+pipeline {
+    agent any
+
+    environment {
+        VENV = '.venv'
+        DOCKER_IMAGE = 'your-dockerhub-username/messaging_app'
+        DOCKER_TAG = 'latest'
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                git branch: 'main',
+                    credentialsId: 'github-creds',
+                    url: 'https://github.com/YOUR-USERNAME/messaging_app.git'
+            }
+        }
+
+        stage('Setup Python & Install Deps') {
+            steps {
+                sh """
+                    python3 -m venv ${VENV}
+                    source ${VENV}/bin/activate
+                    pip install --upgrade pip
+                    pip install -r requirements.txt
+                """
+            }
+        }
+
+        stage('Run Tests') {
+            steps {
+                sh """
+                    source ${VENV}/bin/activate
+                    pytest --junitxml=reports/results.xml --html=reports/report.html --self-contained-html
+                """
+            }
+            post {
+                always {
+                    junit 'reports/results.xml'
+                    publishHTML([reportDir: 'reports', reportFiles: 'report.html', reportName: 'Pytest HTML Report'])
+                }
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                script {
+                    sh """
+                        docker build -t ${DOCKER_IMAGE}:${DOCKER_TAG} .
+                    """
+                }
+            }
+        }
+
+        stage('Push Docker Image') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'dockerhub-creds', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                    sh """
+                        echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
+                        docker push ${DOCKER_IMAGE}:${DOCKER_TAG}
+                    """
+                }
+            }
+        }
+    }
+
+    triggers {
+        // Manual trigger only
+    }
+}
